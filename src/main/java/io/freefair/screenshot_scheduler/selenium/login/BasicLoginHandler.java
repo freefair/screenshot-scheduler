@@ -16,7 +16,10 @@ public class BasicLoginHandler implements ILoginHandler {
 	public void doLogin(SeleniumSession session, AuthenticationInformation authenticationInformation) {
 		URI currentUri = URI.create(session.getDriver().getCurrentUrl());
 		var info = ((BasicAuthenticationInformation)authenticationInformation);
-		String newUrl = currentUri.getScheme() + "://" + info.getUsername() + ":" + info.getPassword() + "@" + currentUri.getHost() + ":" + currentUri.getPort() + "/";
+		String newUrl = currentUri.getScheme() + "://" + info.getUsername() + ":" + info.getPassword() + "@" + currentUri.getHost();
+		if(currentUri.getPort() > 0)
+			newUrl += ":" + currentUri.getPort();
+		newUrl += "/";
 		if(currentUri.getRawPath() != null)
 			newUrl += currentUri.getRawPath();
 		if(currentUri.getRawQuery() != null)

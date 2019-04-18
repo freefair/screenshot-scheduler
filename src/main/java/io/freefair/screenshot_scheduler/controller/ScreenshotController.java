@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -43,16 +44,19 @@ public class ScreenshotController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
+	@Transactional
 	public Screenshot create(@RequestBody Screenshot screenshot) {
 		return screenshotRepository.saveAndFlush(screenshot);
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
+	@Transactional
 	public Screenshot update(@RequestBody Screenshot screenshot) {
 		return screenshotRepository.saveAndFlush(screenshot);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@Transactional
 	public void delete(@PathVariable("id") UUID id) {
 		screenshotRepository.deleteById(id);
 	}
