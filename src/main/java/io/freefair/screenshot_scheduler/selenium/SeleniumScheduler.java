@@ -99,7 +99,7 @@ public class SeleniumScheduler {
 
 	public void createSession(Screenshot s) {
 		synchronized (sessionMap) {
-			var session = new ScheduledSeleniumSession(sessionFactory.getObject(), false, 0);
+			var session = new ScheduledSeleniumSession(sessionFactory.getObject(), false, 0, s.getYScroll());
 			log.info("Creating screenshot session for {}", s.getId().toString());
 			sessionMap.put(s.getId(), session);
 			doLogin(session, s);

@@ -2,10 +2,7 @@ package io.freefair.screenshot_scheduler.selenium;
 
 import io.freefair.screenshot_scheduler.models.Screenshot;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,11 +32,10 @@ public class ScreenshotThread implements Runnable {
 	@Override
 	public void run() {
 		try {
+			((RemoteWebDriver)scheduledSeleniumSession.getSession().getDriver()).executeScript("window.scrollTo(0, " + scheduledSeleniumSession.getYScroll() + ")");
 			SeleniumHelper.createScreenshot(scheduledSeleniumSession.getSession().getDriver(), new File(new File(outputDirectory), screenshot.getId().toString() + ".png"));
 		} catch (IOException e) {
 			log.error("Error while creating screenshot", e);
 		}
 	}
-
-
 }

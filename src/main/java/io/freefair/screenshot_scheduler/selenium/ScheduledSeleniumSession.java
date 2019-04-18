@@ -11,6 +11,7 @@ public class ScheduledSeleniumSession {
 	private SeleniumSession session;
 	private boolean ready;
 	private long lastExecution;
+	private int yScroll;
 
 	public void delete() {
 		session.stop();

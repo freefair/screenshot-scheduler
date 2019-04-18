@@ -26,6 +26,8 @@ public class Screenshot {
 
 	private int intervalSeconds;
 
+	private int yScroll;
+
 	private boolean autostart;
 
 	@OneToOne(cascade = CascadeType.ALL)
