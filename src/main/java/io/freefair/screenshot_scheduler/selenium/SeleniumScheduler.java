@@ -46,6 +46,13 @@ public class SeleniumScheduler {
 		execute(all);
 	}
 
+	public ScheduledSeleniumSession getSession(UUID id) {
+		if(sessionMap.containsKey(id)) {
+			return sessionMap.get(id);
+		}
+		return null;
+	}
+
 	private void execute(List<Screenshot> all) {
 		for (UUID key : sessionMap.keySet()) {
 			Screenshot screenshot = all.stream().filter(a -> a.getId().equals(key)).findFirst().orElse(null);
@@ -62,19 +69,40 @@ public class SeleniumScheduler {
 
 	private void updateSessions(List<Screenshot> all) {
 		for (Screenshot s : all) {
-			if (!sessionMap.containsKey(s.getId())) {
-				var session = new ScheduledSeleniumSession(sessionFactory.getObject(), false, 0);
-				log.info("Creating screenshot session for {}", s.getId().toString());
-				sessionMap.put(s.getId(), session);
-				doLogin(session, s);
+			if (!sessionMap.containsKey(s.getId()) && s.isAutostart()) {
+				createSession(s);
 			}
 		}
 		for (UUID key : sessionMap.keySet()) {
 			if (all.stream().noneMatch(s -> s.getId().equals(key))) {
-				log.info("Deleting screenshot session for {}", key.toString());
-				sessionMap.get(key).delete();
-				sessionMap.remove(key);
+				stopSession(key);
 			}
+		}
+	}
+
+	public void restartSession(UUID key) {
+		synchronized (sessionMap) {
+			if(!sessionMap.containsKey(key)) return;
+			ScheduledSeleniumSession scheduledSeleniumSession = sessionMap.get(key);
+			scheduledSeleniumSession.getSession().restart();
+			doLogin(scheduledSeleniumSession, screenshotRepository.getOne(key));
+		}
+	}
+
+	public void stopSession(UUID key) {
+		synchronized (sessionMap) {
+			log.info("Deleting screenshot session for {}", key.toString());
+			sessionMap.get(key).delete();
+			sessionMap.remove(key);
+		}
+	}
+
+	public void createSession(Screenshot s) {
+		synchronized (sessionMap) {
+			var session = new ScheduledSeleniumSession(sessionFactory.getObject(), false, 0);
+			log.info("Creating screenshot session for {}", s.getId().toString());
+			sessionMap.put(s.getId(), session);
+			doLogin(session, s);
 		}
 	}
 

@@ -13,6 +13,6 @@ public class ScheduledSeleniumSession {
 	private long lastExecution;
 
 	public void delete() {
-		session.getDriver().close();
+		session.stop();
 	}
 }

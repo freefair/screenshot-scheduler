@@ -26,6 +26,8 @@ public class Screenshot {
 
 	private int intervalSeconds;
 
+	private boolean autostart;
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private AuthenticationInformation authenticationInformation;
 }

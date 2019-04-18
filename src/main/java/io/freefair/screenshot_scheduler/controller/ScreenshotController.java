@@ -2,6 +2,7 @@ package io.freefair.screenshot_scheduler.controller;
 
 import io.freefair.screenshot_scheduler.models.Screenshot;
 import io.freefair.screenshot_scheduler.repositories.ScreenshotRepository;
+import io.freefair.screenshot_scheduler.selenium.SeleniumScheduler;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
