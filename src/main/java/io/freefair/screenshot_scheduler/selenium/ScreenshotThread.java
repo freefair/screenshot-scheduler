@@ -12,12 +12,14 @@ public class ScreenshotThread implements Runnable {
 	private final ScheduledSeleniumSession scheduledSeleniumSession;
 	private final Screenshot screenshot;
 	private String outputDirectory;
+	private SeleniumHelper helper;
 	private Thread thread;
 
-	public ScreenshotThread(ScheduledSeleniumSession scheduledSeleniumSession, Screenshot screenshot, String outputDirectory) {
+	public ScreenshotThread(ScheduledSeleniumSession scheduledSeleniumSession, Screenshot screenshot, String outputDirectory, SeleniumHelper helper) {
 		this.scheduledSeleniumSession = scheduledSeleniumSession;
 		this.screenshot = screenshot;
 		this.outputDirectory = outputDirectory;
+		this.helper = helper;
 		thread = new Thread(this);
 	}
 
@@ -33,7 +35,7 @@ public class ScreenshotThread implements Runnable {
 	public void run() {
 		try {
 			((RemoteWebDriver)scheduledSeleniumSession.getSession().getDriver()).executeScript("window.scrollTo(0, " + scheduledSeleniumSession.getYScroll() + ")");
-			SeleniumHelper.createScreenshot(scheduledSeleniumSession.getSession().getDriver(), new File(new File(outputDirectory), screenshot.getId().toString() + ".png"));
+			helper.createScreenshot(scheduledSeleniumSession.getSession().getDriver(), new File(new File(outputDirectory), screenshot.getId().toString() + ".png"), screenshot.isTimestamp());
 		} catch (IOException e) {
 			log.error("Error while creating screenshot", e);
 		}

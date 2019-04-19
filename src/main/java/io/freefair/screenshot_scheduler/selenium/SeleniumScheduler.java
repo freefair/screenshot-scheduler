@@ -29,6 +29,9 @@ public class SeleniumScheduler {
 	@Autowired
 	private List<ILoginHandler> loginHandlers;
 
+	@Autowired
+	private SeleniumHelper seleniumHelper;
+
 	@Value("${screenshot.outputDirectory}")
 	private String outputDirectory;
 
@@ -62,7 +65,7 @@ public class SeleniumScheduler {
 			if ((System.currentTimeMillis() - scheduledSeleniumSession.getLastExecution()) < screenshot.getIntervalSeconds() * 1000)
 				continue;
 			log.info("Taking screenshot for {}", key.toString());
-			new ScreenshotThread(scheduledSeleniumSession, screenshot, outputDirectory).start();
+			new ScreenshotThread(scheduledSeleniumSession, screenshot, outputDirectory, seleniumHelper).start();
 			scheduledSeleniumSession.setLastExecution(System.currentTimeMillis());
 		}
 	}

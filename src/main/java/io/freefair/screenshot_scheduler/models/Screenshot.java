@@ -30,6 +30,8 @@ public class Screenshot {
 
 	private boolean autostart;
 
+	private boolean timestamp;
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private AuthenticationInformation authenticationInformation;
 }
