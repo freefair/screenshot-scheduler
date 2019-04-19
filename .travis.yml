@@ -1,11 +1,18 @@
 language: java
 
+sudo: false
+dist: trusty
+
+before_script:
+- unset -v _JAVA_OPTIONS
+- wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+
 jobs:
   include:
   - stage: adoptopenjdk.net
     env: JDK=12
     script: source install-jdk.sh --url https://github.com/AdoptOpenJDK/openjdk12-binaries/releases/download/jdk-12%2B33/OpenJDK12U-jdk_x64_linux_hotspot_12_33.tar.gz
-  
+
 install: ./gradlew clean
 
 script: ./gradlew check
