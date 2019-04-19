@@ -26,3 +26,9 @@ jobs:
         file: ./build/libs/screenshot-scheduler.jar
         skip_cleanup: true
         draft: true
+
+stages:
+  - compile
+  - test
+  - name: deploy
+    if: branch = master
