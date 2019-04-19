@@ -6,24 +6,13 @@ before_script:
 - unset -v _JAVA_OPTIONS
 - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
 
-before_install:
-  - >-
-    openssl aes-256-cbc 
-    -K $encrypted_312f20231bfb_key
-    -iv $encrypted_312f20231bfb_iv
-    -in github_deploy_key.enc 
-    -out github_deploy_key 
-    -d
-  - chmod 600 github_deploy_key
-  - eval $(ssh-agent -s)
-  - ssh-add github_deploy_key
-
 jobs:
   include:
+    - stage: adoptopenjdk
+      script: install-jdk.sh --url https://github.com/AdoptOpenJDK/openjdk12-binaries/releases/download/jdk-12%2B33/OpenJDK12U-jdk_x64_linux_hotspot_12_33.tar.gz
     - stage: build
       env: JDK=12
       script:
-        - source install-jdk.sh --url https://github.com/AdoptOpenJDK/openjdk12-binaries/releases/download/jdk-12%2B33/OpenJDK12U-jdk_x64_linux_hotspot_12_33.tar.gz
         - if [ -z "$TRAVIS_TAG" ]; then TRAVIS_TAG=1.0-SNAPSHOT; fi;
         - ./gradlew clean
         - ./gradlew check
