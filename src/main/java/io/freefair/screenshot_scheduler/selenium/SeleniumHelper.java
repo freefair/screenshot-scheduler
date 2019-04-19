@@ -23,6 +23,9 @@ public class SeleniumHelper {
 	@Value("${screenshot.date-format}")
 	private String dateFormat;
 
+	@Value("${screenshot.date-font-size}")
+	private float fontSize;
+
 	public void createScreenshot(WebDriver driver, File outputFile, boolean withTimestamp) throws IOException {
 		byte[] screenshotAs = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
 		if(withTimestamp) {
@@ -30,7 +33,8 @@ public class SeleniumHelper {
 			Graphics graphics = image.getGraphics();
 			Font font = null;
 			try {
-				font = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(SeleniumHelper.class.getClassLoader().getResourceAsStream("Helvetica.ttf")));
+				font = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(SeleniumHelper.class.getClassLoader().getResourceAsStream("Helvetica.ttf")))
+						   .deriveFont(fontSize);
 			} catch (Exception ex) {
 				throw new RuntimeException(ex);
 			}
