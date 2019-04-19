@@ -19,12 +19,10 @@ before_install:
 
 jobs:
   include:
-  - stage: adoptopenjdk.net
-    env: JDK=12
-    script: source install-jdk.sh --url https://github.com/AdoptOpenJDK/openjdk12-binaries/releases/download/jdk-12%2B33/OpenJDK12U-jdk_x64_linux_hotspot_12_33.tar.gz
   - stage: build
     env: JDK=12
     script:
+      - source install-jdk.sh --url https://github.com/AdoptOpenJDK/openjdk12-binaries/releases/download/jdk-12%2B33/OpenJDK12U-jdk_x64_linux_hotspot_12_33.tar.gz
       - if [ -z "$TRAVIS_TAG" ]; then TRAVIS_TAG=1.0-SNAPSHOT; fi;
       - ./gradlew clean
       - ./gradlew check
