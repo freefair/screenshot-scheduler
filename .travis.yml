@@ -2,33 +2,20 @@ language: java
 sudo: false
 dist: trusty
 
-before_script:
-- unset -v _JAVA_OPTIONS
-- wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+before_script: 
+  - unset -v _JAVA_OPTIONS
+  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
 
-jobs:
-  include:
-    - stage: adoptopenjdk
-      script: install-jdk.sh --url https://github.com/AdoptOpenJDK/openjdk12-binaries/releases/download/jdk-12%2B33/OpenJDK12U-jdk_x64_linux_hotspot_12_33.tar.gz
-    - stage: build
-      env: JDK=12
-      script:
-        - if [ -z "$TRAVIS_TAG" ]; then TRAVIS_TAG=1.0-SNAPSHOT; fi;
-        - ./gradlew clean
-        - ./gradlew check
-        - ./gradlew -Pversion=$TRAVIS_TAG assemble
-    - stage: deploy
-      script: skip
-      deploy:
-        provider: releases
-        api_key: 
-          secure: "c46I038H0LnmuX7+0caK2SFlsZJbk9As7TMFRyrzYhMY3NpIpaeGaq5JttvY6GHlkSz5sCDHXfWmIFlyC2zQGjTiKDKW7nLeSEeC1cE0gLhxytPjvMc4iMDE0ToJ5F1+bClV/Xi8eNYchb6r06qV+iOrbD/UVwfwJtwQUj4U3xdvhsdBDcIJrkrPTsoQRrpNouS2HwwDOLmRy+OAPOHLaPy3a02LyoI2tfZd9Ynn2E/3bZf/MaEOk0rc5DYXryWyWNpbp0AuPe39N+JkNYhMSRSYgK3v5lYe3ehe6XWFImV69FAKJl/c94OJsKTxIgwBc/AKqjvvVzglHh0sFgmG1Lis0OxlrzAOosxLg6YaDUQicXuR653FTtW7V+hnyEBJjlRd7fHnZ0AGDgYyzTMY+xBb5i1pYatx/t6I2WU1f+lMVNdKlcajrkulxlwFC9ixPm+ij1gbUL4DMXe/aA8Izj10goRHp5wd+4+HYZMu47PhrUlo1rJOlroWl6edlO+qakizhwIMNSCN/Y6amIn6UwB+o9g2NlA7+d+iI2YKEsa4SO6eTHWOI91NWOV7rCDkKzow8gIHnLyEXcuuTFK30OK9cjzjTLBNE1dTpMa6HGlwcSycgfTucikvoYubg27LSS2EH1tkXPiRgxppDbvke+vfldtAN5fJr66bgT8C+hk="
-        file: ./build/libs/screenshot-scheduler.jar
-        skip_cleanup: true
-        draft: true
+script:
+  - if [ -z "$TRAVIS_TAG" ]; then TRAVIS_TAG=1.0-SNAPSHOT; fi;
+  - ./gradlew clean
+  - ./gradlew check
+  - ./gradlew -Pversion=$TRAVIS_TAG assemble
 
-stages:
-  - compile
-  - test
-  - name: deploy
-    if: branch = master
+deploy:
+  provider: releases
+  api_key: 
+    secure: "c46I038H0LnmuX7+0caK2SFlsZJbk9As7TMFRyrzYhMY3NpIpaeGaq5JttvY6GHlkSz5sCDHXfWmIFlyC2zQGjTiKDKW7nLeSEeC1cE0gLhxytPjvMc4iMDE0ToJ5F1+bClV/Xi8eNYchb6r06qV+iOrbD/UVwfwJtwQUj4U3xdvhsdBDcIJrkrPTsoQRrpNouS2HwwDOLmRy+OAPOHLaPy3a02LyoI2tfZd9Ynn2E/3bZf/MaEOk0rc5DYXryWyWNpbp0AuPe39N+JkNYhMSRSYgK3v5lYe3ehe6XWFImV69FAKJl/c94OJsKTxIgwBc/AKqjvvVzglHh0sFgmG1Lis0OxlrzAOosxLg6YaDUQicXuR653FTtW7V+hnyEBJjlRd7fHnZ0AGDgYyzTMY+xBb5i1pYatx/t6I2WU1f+lMVNdKlcajrkulxlwFC9ixPm+ij1gbUL4DMXe/aA8Izj10goRHp5wd+4+HYZMu47PhrUlo1rJOlroWl6edlO+qakizhwIMNSCN/Y6amIn6UwB+o9g2NlA7+d+iI2YKEsa4SO6eTHWOI91NWOV7rCDkKzow8gIHnLyEXcuuTFK30OK9cjzjTLBNE1dTpMa6HGlwcSycgfTucikvoYubg27LSS2EH1tkXPiRgxppDbvke+vfldtAN5fJr66bgT8C+hk="
+  file: ./build/libs/screenshot-scheduler.jar
+  skip_cleanup: true
+  draft: true
