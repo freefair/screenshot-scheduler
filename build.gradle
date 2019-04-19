@@ -23,6 +23,10 @@ bootRun {
     sourceResources sourceSets.main
 }
 
+bootJar {
+    archiveName = "$baseName.$extension"
+}
+
 repositories {
     mavenCentral()
 }
