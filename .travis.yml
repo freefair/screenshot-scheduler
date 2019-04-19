@@ -1,6 +1,4 @@
 language: java
-sudo: false
-dist: trusty
 
 before_script: 
   - unset -v _JAVA_OPTIONS
@@ -19,3 +17,5 @@ deploy:
   file: ./build/libs/screenshot-scheduler.jar
   skip_cleanup: true
   draft: true
+  on:
+    tags: true
