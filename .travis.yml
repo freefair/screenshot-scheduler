@@ -1,12 +1,13 @@
 language: java
 
-before_script: 
+before_install:
   - unset -v _JAVA_OPTIONS
   - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
 
+install: ./gradlew clean
+
 script:
   - if [ -z "$TRAVIS_TAG" ]; then TRAVIS_TAG=1.0-SNAPSHOT; fi;
-  - ./gradlew clean
   - ./gradlew check
   - ./gradlew -Pversion=$TRAVIS_TAG assemble
 
