@@ -14,13 +14,15 @@ public class LoginThread implements Runnable {
 	private final Screenshot screenshot;
 	private ILoginHandler loginHandler;
 	private String outputDirectory;
+	private SeleniumHelper helper;
 	private Thread thread;
 
-	public LoginThread(ScheduledSeleniumSession scheduledSeleniumSession, Screenshot screenshot, ILoginHandler loginHandler, String outputDirectory) {
+	public LoginThread(ScheduledSeleniumSession scheduledSeleniumSession, Screenshot screenshot, ILoginHandler loginHandler, String outputDirectory, SeleniumHelper seleniumHelper) {
 		this.scheduledSeleniumSession = scheduledSeleniumSession;
 		this.screenshot = screenshot;
 		this.loginHandler = loginHandler;
 		this.outputDirectory = outputDirectory;
+		this.helper = seleniumHelper;
 		thread = new Thread(this);
 	}
 
@@ -41,7 +43,7 @@ public class LoginThread implements Runnable {
 
 	private void doScreenshot() {
 		try {
-			SeleniumHelper.createScreenshot(scheduledSeleniumSession.getSession().getDriver(), new File(new File(outputDirectory), screenshot.getId().toString() + ".png"));
+			helper.createScreenshot(scheduledSeleniumSession.getSession().getDriver(), new File(new File(outputDirectory), screenshot.getId().toString() + ".png"), screenshot.isTimestamp());
 		} catch (IOException e) {
 			log.error("Error while creating screenshot", e);
 		}

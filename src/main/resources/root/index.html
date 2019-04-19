@@ -2,86 +2,133 @@
 <head>
 	<title>Screenshots UI</title>
 	<script type="text/javascript" src="js/jquery.js"></script>
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap-reboot.min.css"/>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-	      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+	      crossorigin="anonymous">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
 <div class="container">
-<div class="alert alert-danger" role="alert" id="delete-failed-alert" style="display:none;">
-	Deletion failed!
-</div>
+	<nav class="nav nav-pills justify-content-end">
+		<a class="text-sm-center nav-link" data-toggle="modal" data-target="#newModal" href="#">
+			New <i class="fa fa-plus"></i>
+		</a>
+	</nav>
+	<div class="alert alert-danger" role="alert" id="delete-failed-alert" style="display:none;">
+		Deletion failed!
+	</div>
 	<div class="alert alert-danger" role="alert" id="create-failed-alert" style="display:none;">
 		Creation failed!
 	</div>
-<table class="table" id="main-table">
-	<thead>
-	<tr>
-		<th scope="col">#</th>
-		<th scope="col">Url</th>
-		<th scope="col">Auth</th>
-		<th scope="col">Interval</th>
-		<th scope="col"></th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td colspan="5">Loading...</td>
-	</tr>
-	</tbody>
-</table>
+	<div class="alert alert-danger" role="alert" id="restart-failed-alert" style="display:none;">
+		Restart failed!
+	</div>
+	<div class="alert alert-danger" role="alert" id="start-failed-alert" style="display:none;">
+		Start failed!
+	</div>
+	<div class="alert alert-danger" role="alert" id="stop-failed-alert" style="display:none;">
+		Stop failed!
+	</div>
+	<table class="table" id="main-table">
+		<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Url</th>
+			<th scope="col">Auth</th>
+			<th scope="col">Interval</th>
+			<th scope="col"></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td colspan="5">Loading...</td>
+		</tr>
+		</tbody>
+	</table>
 </div>
-<div class="container">
-	<form>
-		<div class="form-group">
-			<label for="url1">URL</label>
-			<input type="text" class="form-control" id="url1" placeholder="URL (e. g. http://google.com/">
-		</div>
-		<div class="form-group">
-			<label for="loginUrl1">Login URL</label>
-			<input type="text" class="form-control" id="loginUrl1" placeholder="Login URL (e. g. http://google.com/">
-		</div>
-		<div class="form-group">
-			<label for="intervalSeconds1">Interval in Seconds</label>
-			<input type="text" class="form-control" id="intervalSeconds1" placeholder="Interval in Seconds (e. g. 10)" value="5">
-		</div>
-		<div class="form-group">
-			<label for="authType1">Authentication type</label>
-			<select class="form-control" id="authType1">
-				<option>NONE</option>
-				<option>BASIC</option>
-				<option>FORM</option>
-			</select>
-		</div>
-		<div class="form-group">
-			<label for="username1">Username</label>
-			<input type="text" class="form-control" id="username1" placeholder="Username">
-		</div>
-		<div class="form-group">
-			<label for="password1">Password</label>
-			<input type="text" class="form-control" id="password1" placeholder="Password">
-		</div>
+<div class="modal" tabindex="-1" role="dialog" id="newModal" aria-hidden="true" aria-labelledby="newModalTitle">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form onsubmit="return false;">
+				<div class="modal-header">
+					<h5 class="modal-title" id="newModalTitle">New screenshot session</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="url1">URL</label>
+						<input type="text" class="form-control" id="url1"
+						       placeholder="URL (e. g. http://google.com/">
+					</div>
+					<div class="form-group">
+						<label for="loginUrl1">Login URL</label>
+						<input type="text" class="form-control" id="loginUrl1"
+						       placeholder="Login URL (e. g. http://google.com/">
+					</div>
+					<div class="form-group">
+						<label for="intervalSeconds1">Interval in Seconds</label>
+						<input type="number" class="form-control" id="intervalSeconds1"
+						       placeholder="Interval in Seconds (e. g. 10)" value="5" min="1">
+					</div>
+					<div class="form-group">
+						<label for="authType1">Authentication type</label>
+						<select class="form-control" id="authType1">
+							<option>NONE</option>
+							<option>BASIC</option>
+							<option>FORM</option>
+						</select>
+					</div>
+					<div class="form-group" id="username-container" style="display: none;">
+						<label for="username1">Username</label>
+						<input type="text" class="form-control" id="username1" placeholder="Username">
+					</div>
+					<div class="form-group" id="password-container" style="display: none;">
+						<label for="password1">Password</label>
+						<input type="text" class="form-control" id="password1" placeholder="Password">
+					</div>
 
-		<div class="form-group">
-			<label for="usernameSelector1">Username CSS-Selector</label>
-			<input type="text" class="form-control" id="usernameSelector1" placeholder="Username CSS-Selector (e. g. body)" value="[name='username']">
+					<div class="form-group" id="username-selector-container" style="display: none;">
+						<label for="usernameSelector1">Username CSS-Selector</label>
+						<input type="text" class="form-control" id="usernameSelector1"
+						       placeholder="Username CSS-Selector (e. g. body)" value="[name='username']">
+					</div>
+					<div class="form-group" id="password-selector-container" style="display: none;">
+						<label for="passwordSelector1">Password CSS-Selector</label>
+						<input type="text" class="form-control" id="passwordSelector1"
+						       placeholder="Password CSS-Selector (e. g. body)" value="[name='password']">
+					</div>
+					<div class="form-group" id="submit-selector-container" style="display: none;">
+						<label for="submitSelector1">Submit CSS-Selector</label>
+						<input type="text" class="form-control" id="submitSelector1"
+						       placeholder="Submit CSS-Selector (e. g. body)" value="[type='submit']">
+					</div>
+					<div class="form-group">
+						<label for="yscroll">Y-Scroll</label>
+						<input type="number" class="form-control" id="yscroll"
+								placeholder="Y-Scroll (e. g. 50)" value="0" min="0"/>
+					</div>
+					<div class="form-check form-check-inline col-5">
+						<input type="checkbox" class="form-check-input" id="autostart1" value="true" checked/>
+						<label for="autostart1" class="form-check-label">Autostart session</label>
+					</div>
+					<div class="form-check form-check-inline col-6">
+						<input type="checkbox" class="form-check-input" id="timestamp1" value="true" checked/>
+						<label for="timestamp1" class="form-check-label">With timestamp</label>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Abort</button>
+					<button type="submit" id="saveNewScreenshot" data-dismiss="modal" class="btn btn-primary">Save</button>
+				</div>
+			</form>
 		</div>
-		<div class="form-group">
-			<label for="passwordSelector1">Password CSS-Selector</label>
-			<input type="text" class="form-control" id="passwordSelector1" placeholder="Password CSS-Selector (e. g. body)" value="[name='password']">
-		</div>
-		<div class="form-group">
-			<label for="submitSelector1">Submit CSS-Selector</label>
-			<input type="text" class="form-control" id="submitSelector1" placeholder="Submit CSS-Selector (e. g. body)" value="[type='submit']">
-		</div>
-		<div class="form-group">
-			<button type="button" id="saveNewScreenshot" class="form-control btn btn-primary">Save</button>
-		</div>
-	</form>
+	</div>
 </div>
 
 </body>

@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,8 @@ public class SeleniumScheduler {
 	private String outputDirectory;
 
 	private final Map<UUID, ScheduledSeleniumSession> sessionMap = new HashMap<>();
+
+	private final List<UUID> stoppedSessions = new ArrayList<>();
 
 	@Autowired
 	public SeleniumScheduler(SeleniumSessionFactory sessionFactory) {
@@ -71,14 +74,16 @@ public class SeleniumScheduler {
 	}
 
 	private void updateSessions(List<Screenshot> all) {
-		for (Screenshot s : all) {
-			if (!sessionMap.containsKey(s.getId()) && s.isAutostart()) {
-				createSession(s);
+		synchronized (sessionMap) {
+			for (Screenshot s : all) {
+				if (!sessionMap.containsKey(s.getId()) && s.isAutostart() && !stoppedSessions.contains(s.getId())) {
+					createSession(s);
+				}
 			}
-		}
-		for (UUID key : sessionMap.keySet()) {
-			if (all.stream().noneMatch(s -> s.getId().equals(key))) {
-				stopSession(key);
+			for (UUID key : sessionMap.keySet()) {
+				if (all.stream().noneMatch(s -> s.getId().equals(key))) {
+					stopSession(key);
+				}
 			}
 		}
 	}
@@ -97,6 +102,7 @@ public class SeleniumScheduler {
 			log.info("Deleting screenshot session for {}", key.toString());
 			sessionMap.get(key).delete();
 			sessionMap.remove(key);
+			stoppedSessions.add(key);
 		}
 	}
 
@@ -104,12 +110,13 @@ public class SeleniumScheduler {
 		synchronized (sessionMap) {
 			var session = new ScheduledSeleniumSession(sessionFactory.getObject(), false, 0, s.getYScroll());
 			log.info("Creating screenshot session for {}", s.getId().toString());
+			stoppedSessions.remove(s.getId());
 			sessionMap.put(s.getId(), session);
 			doLogin(session, s);
 		}
 	}
 
 	private void doLogin(ScheduledSeleniumSession session, Screenshot s) {
-		new LoginThread(session, s, loginHandlers.stream().filter(h -> h.isCapableOf(s.getAuthenticationInformation())).findFirst().orElse(null), outputDirectory).start();
+		new LoginThread(session, s, loginHandlers.stream().filter(h -> h.isCapableOf(s.getAuthenticationInformation())).findFirst().orElse(null), outputDirectory, seleniumHelper).start();
 	}
 }

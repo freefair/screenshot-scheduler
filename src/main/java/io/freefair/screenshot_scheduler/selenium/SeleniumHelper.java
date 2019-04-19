@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -28,25 +29,31 @@ public class SeleniumHelper {
 
 	public void createScreenshot(WebDriver driver, File outputFile, boolean withTimestamp) throws IOException {
 		byte[] screenshotAs = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-		if(withTimestamp) {
+		if (withTimestamp) {
 			BufferedImage image = ImageIO.read(new ByteArrayInputStream(screenshotAs));
 			Graphics graphics = image.getGraphics();
-			Font font = null;
+			Font font;
 			try {
 				font = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(SeleniumHelper.class.getClassLoader().getResourceAsStream("Helvetica.ttf")))
-						   .deriveFont(fontSize);
+						.deriveFont(fontSize);
 			} catch (Exception ex) {
 				throw new RuntimeException(ex);
 			}
 			String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat));
 			Rectangle2D stringBounds = graphics.getFontMetrics(font).getStringBounds(time, graphics);
-			int stringWidth = (int)stringBounds.getWidth();
+			int stringWidth = (int) stringBounds.getWidth();
 			int imageWidth = image.getWidth();
-			int stringHeight = (int)stringBounds.getHeight();
+			int stringHeight = (int) stringBounds.getHeight();
 			int imageHeight = image.getHeight();
-			graphics.fillRect((int) (imageWidth - stringWidth - 10), (imageHeight - stringHeight - 5), (stringWidth + 10), (stringHeight + 5));
+			graphics.setColor(Color.WHITE);
+			graphics.fillRect((imageWidth - stringWidth - 10), (imageHeight - stringHeight - 5), (stringWidth + 10), (stringHeight + 5));
+
+			graphics.setColor(Color.BLACK);
 			graphics.setFont(font);
-			graphics.drawString(time, (imageWidth - stringWidth - 5), (imageHeight - stringHeight - 2));
+			graphics.drawString(time, (imageWidth - stringWidth - 5), (imageHeight - 3));
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			ImageIO.write(image, "PNG", byteArrayOutputStream);
+			screenshotAs = byteArrayOutputStream.toByteArray();
 		}
 		FileUtils.writeByteArrayToFile(outputFile, screenshotAs);
 	}
