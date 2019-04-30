@@ -5,6 +5,7 @@ import io.freefair.screenshot_scheduler.models.UsernamePasswordAuthenticationInf
 import org.springframework.beans.factory.annotation.Autowired;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
 public class AWSAuthenticationProvider implements AuthenticationProvider {
 
@@ -24,7 +25,8 @@ public class AWSAuthenticationProvider implements AuthenticationProvider {
 		if(information instanceof UsernamePasswordAuthenticationInformation) {
 			String password = ((UsernamePasswordAuthenticationInformation) information).getPassword();
 			password = password.substring(4);
-			secretsManagerClient.getSecretValue(GetSecretValueRequest.builder().secretId(password).build());
+			GetSecretValueResponse secretValue = secretsManagerClient.getSecretValue(GetSecretValueRequest.builder().secretId(password).build());
+			return secretValue.secretString();
 		}
 		return null;
 	}
