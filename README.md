@@ -1,4 +1,4 @@
-# Screenshot tool most likley for monitoring in organisations
+# Screenshot tool most likely for monitoring in organisations
 This tools allows you to specify a URL with login credentials with wich the application will take screenshots in a configured interval.
 You can use it to frequently generate screenshot from monitoring tools like grafana or kibana (not exclusively). 
 
