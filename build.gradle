@@ -19,6 +19,10 @@ version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.11
 
+ext {
+    awsVersion = "2.5.33"
+}
+
 bootRun {
     sourceResources sourceSets.main
 }
@@ -41,6 +45,8 @@ dependencies {
     compile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version: '3.141.59'
 
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
+
+    compile "software.amazon.awssdk:aws-sdk-java:${awsVersion}"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class FormAuthenticationInformation extends AuthenticationInformation {
+public class FormAuthenticationInformation extends AuthenticationInformation implements UsernamePasswordAuthenticationInformation {
 
 	private String usernameSelector;
 	private String passwordSelector;

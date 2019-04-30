@@ -10,11 +10,12 @@ import javax.persistence.Entity;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class BasicAuthenticationInformation extends AuthenticationInformation {
+public class BasicAuthenticationInformation extends AuthenticationInformation implements UsernamePasswordAuthenticationInformation {
 	private String username;
 	private String password;
 
 	@JsonIgnore
+	@Override
 	public String getUsername() {
 		return username;
 	}

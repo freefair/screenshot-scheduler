@@ -212,3 +212,4 @@ gradle-app.setting
 **/build/
 
 # End of https://www.gitignore.io/api/IntelliJ,windows,linux,macos,osx,java,spring,selenium,gradle
+screenshots/
