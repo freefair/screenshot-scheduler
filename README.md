@@ -24,4 +24,4 @@ screenshot.aws.region=<YOUR-REGION(e.g. eu-central-1)>
 screenshot.aws.key_id=<YOUR-ACCESS-KEY-ID>
 screenshot.aws.access_key=<YOUR-SECRET-ACCESS-KEY>
 ```
-AWS Secrets need to be specified as `aws:<SECRET-ID>` in Web-UI
+AWS Secrets need to be specified as `aws:<SECRET-ID>` in Web-UI password field
