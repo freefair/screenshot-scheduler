@@ -24,8 +24,12 @@ public class SeleniumSession {
 	@Getter
 	private WebDriver driver;
 
-	public SeleniumSession(int implicitlyWait, int height, int width) {
+	@Getter
+	private String[] chromeArgs;
+
+	public SeleniumSession(int implicitlyWait, int height, int width, String[] chromeArgs) {
 		this.implicitlyWait = implicitlyWait;
+		this.chromeArgs = chromeArgs;
 		this.height = height;
 		this.width = width;
 		init();
@@ -33,7 +37,7 @@ public class SeleniumSession {
 
 	private void init() {
 		var options = new ChromeOptions();
-		options.addArguments("--headless");
+		options.addArguments(chromeArgs);
 		driver = new ChromeDriver(options);
 		driver.manage().timeouts().implicitlyWait(implicitlyWait, TimeUnit.SECONDS);
 		driver.manage().window().setPosition(new Point(0, 0));
