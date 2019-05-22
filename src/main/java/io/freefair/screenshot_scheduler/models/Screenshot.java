@@ -17,7 +17,7 @@ public class Screenshot {
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
-	@Column(columnDefinition = "varchar(32)")
+	@Column(columnDefinition = "varchar(36)")
 	private UUID id;
 
 	private String url;
