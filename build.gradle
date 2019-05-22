@@ -41,6 +41,9 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "com.h2database:h2"
 
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.16'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
+
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version: '3.141.59'
 
