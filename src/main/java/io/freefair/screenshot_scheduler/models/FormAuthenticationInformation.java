@@ -1,5 +1,6 @@
 package io.freefair.screenshot_scheduler.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,5 +16,7 @@ public class FormAuthenticationInformation extends AuthenticationInformation imp
 	private String submitSelector;
 
 	private String username;
+
+	@JsonIgnore
 	private String password;
 }
