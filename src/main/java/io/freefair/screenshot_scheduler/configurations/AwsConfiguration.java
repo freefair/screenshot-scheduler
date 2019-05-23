@@ -23,7 +23,7 @@ public class AwsConfiguration {
 	public SecretsManagerClient secretsManagerClient(@Value("${screenshot.aws.key_id}") String awsKeyId, @Value("${screenshot.aws.access_key}") String awsAccessKey, @Value("${screenshot.aws.region}") String region, @Value("${screenshot.aws.use_iam_role}") boolean useIamRole) {
 		Region regionEnum = Region.of(region);
 		if(useIamRole)
-			SecretsManagerClient
+			return SecretsManagerClient
 					.builder()
 					.region(regionEnum)
 					.credentialsProvider(InstanceProfileCredentialsProvider.create())
