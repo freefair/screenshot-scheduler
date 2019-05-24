@@ -28,6 +28,8 @@ public class Screenshot {
 
 	private int yScroll;
 
+	private int zoomLevel;
+
 	private boolean autostart;
 
 	private boolean timestamp;

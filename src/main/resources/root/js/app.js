@@ -101,7 +101,7 @@ $(document).ready(function () {
 				idA.text(screenshot.id);
 				id.append(idA);
 				$tr.append(id);
-				var url = $("<td scope='col'/>");
+				var url = $("<td scope='col' class='url-col'/>");
 				url.text(screenshot.url);
 				$tr.append(url);
 				var auth = $("<td scope='col'/>");
@@ -132,6 +132,7 @@ $(document).ready(function () {
 		var submitSelector = $("#submitSelector1").val();
 		var autostart = $("#autostart1").is(":checked");
 		var yscroll = $("#yscroll").val();
+		var zoomLevel = $("#zoom-level").val();
 		var timestamp = $("#timestamp1").is(":checked");
 
 		console.log(autostart, yscroll, timestamp);
@@ -166,6 +167,7 @@ $(document).ready(function () {
 			"yScroll": yscroll,
 			"autostart": autostart,
 			"timestamp": timestamp,
+			"zoomLevel": zoomLevel,
 			authenticationInformation: authenticationInformation
 		};
 
