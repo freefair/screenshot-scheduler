@@ -4,6 +4,9 @@ import io.freefair.screenshot_scheduler.models.Screenshot;
 import io.freefair.screenshot_scheduler.selenium.ScheduledSeleniumSession;
 import io.freefair.screenshot_scheduler.selenium.SeleniumHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,8 +46,10 @@ public class LoginThread implements Runnable {
 
 	private void doScreenshot() {
 		try {
+			var zoomLevel = screenshot.getZoomLevel() * 10;
+			((RemoteWebDriver)scheduledSeleniumSession.getSession().getDriver()).executeScript("document.body.style.zoom = '" + zoomLevel + "%'");
 			helper.createScreenshot(scheduledSeleniumSession.getSession().getDriver(), new File(new File(outputDirectory), screenshot.getId().toString() + ".png"), screenshot.isTimestamp());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("Error while creating screenshot", e);
 		}
 	}
