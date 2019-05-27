@@ -5,6 +5,7 @@ import io.freefair.screenshot_scheduler.repositories.ScreenshotRepository;
 import io.freefair.screenshot_scheduler.selenium.login.ILoginHandler;
 import io.freefair.screenshot_scheduler.selenium.login.LoginThread;
 import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -65,11 +66,24 @@ public class SeleniumScheduler {
 			ScheduledSeleniumSession scheduledSeleniumSession = sessionMap.get(key);
 			if (screenshot == null) continue;
 			if (!scheduledSeleniumSession.isReady()) continue;
-			if ((System.currentTimeMillis() - scheduledSeleniumSession.getLastExecution()) < screenshot.getIntervalSeconds() * 1000)
-				continue;
-			log.info("Taking screenshot for {}", key.toString());
-			new ScreenshotThread(scheduledSeleniumSession, screenshot, outputDirectory, seleniumHelper).start();
-			scheduledSeleniumSession.setLastExecution(System.currentTimeMillis());
+
+			try {
+				if (((RemoteWebDriver)scheduledSeleniumSession.getSession().getDriver()).getSessionId() == null) {
+					throw new Exception("Session died! Try to restart automatically");
+				}
+				if ((System.currentTimeMillis() - scheduledSeleniumSession.getLastExecution()) < screenshot.getIntervalSeconds() * 1000)
+					continue;
+				log.info("Taking screenshot for {}", key.toString());
+				new ScreenshotThread(scheduledSeleniumSession, screenshot, outputDirectory, seleniumHelper).start();
+				scheduledSeleniumSession.setLastExecution(System.currentTimeMillis());
+			} catch (Exception ex) {
+				log.error("Error while execute " + key, ex);
+
+				if (((RemoteWebDriver)scheduledSeleniumSession.getSession().getDriver()).getSessionId() == null) {
+					scheduledSeleniumSession.getSession().getDriver().quit();
+				}
+				sessionMap.remove(key);
+			}
 		}
 	}
 
