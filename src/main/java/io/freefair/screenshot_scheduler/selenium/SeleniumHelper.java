@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -44,7 +45,7 @@ public class SeleniumHelper {
 			} catch (Exception ex) {
 				throw new RuntimeException(ex);
 			}
-			String time = LocalDateTime.now().atZone(TimeZone.getTimeZone(timeZone).toZoneId()).format(DateTimeFormatter.ofPattern(dateFormat));
+			String time = ZonedDateTime.now(TimeZone.getTimeZone(timeZone).toZoneId()).format(DateTimeFormatter.ofPattern(dateFormat));
 			Rectangle2D stringBounds = graphics.getFontMetrics(font).getStringBounds(time, graphics);
 			int stringWidth = (int) stringBounds.getWidth();
 			int imageWidth = image.getWidth();
