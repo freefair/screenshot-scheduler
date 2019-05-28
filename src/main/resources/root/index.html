@@ -62,15 +62,17 @@
 					</button>
 				</div>
 				<div class="modal-body">
+					<div class="alert alert-danger" role="alert" id="save-failed" style="display:none;">
+					</div>
 					<div class="form-group">
 						<label for="url1">URL</label>
 						<input type="text" class="form-control" id="url1"
-						       placeholder="URL (e. g. http://google.com/">
+						       placeholder="URL (e. g. http://google.com/" required>
 					</div>
 					<div class="form-group">
 						<label for="loginUrl1">Login URL</label>
 						<input type="text" class="form-control" id="loginUrl1"
-						       placeholder="Login URL (e. g. http://google.com/">
+						       placeholder="Login URL (e. g. http://google.com/" required>
 					</div>
 					<div class="form-group">
 						<label for="intervalSeconds1">Interval in Seconds</label>
@@ -130,7 +132,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Abort</button>
-					<button type="submit" id="saveNewScreenshot" data-dismiss="modal" class="btn btn-primary">Save</button>
+					<button type="submit" id="saveNewScreenshot" class="btn btn-primary">Save</button>
 				</div>
 			</form>
 		</div>

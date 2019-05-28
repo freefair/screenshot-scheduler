@@ -135,18 +135,35 @@ $(document).ready(function () {
 		var zoomLevel = $("#zoom-level").val();
 		var timestamp = $("#timestamp1").is(":checked");
 
-		console.log(autostart, yscroll, timestamp);
+		let errorMessages = [];
+
+		if(url.trim() === "") {
+			errorMessages.push("URL is required");
+		}
+
+		if(loginUrl.trim() === "") {
+			errorMessages.push("Login URL is required");
+		}
 
 		var authenticationInformation = {
 			"authenticationType": "NONE",
 			"type": "none"
 		};
+
 		if (authType === "BASIC") {
 			authenticationInformation = {
 				"authenticationType": authType,
 				"username": username,
 				"password": password,
 				"type": "basic"
+			};
+
+			if(username.trim() === "") {
+				errorMessages.push("Username is required")
+			}
+
+			if(password.trim() === "") {
+				errorMessages.push("Password is required")
 			}
 		} else if (authType === "FORM") {
 			authenticationInformation = {
@@ -157,6 +174,26 @@ $(document).ready(function () {
 				"passwordSelector": passwordSelector,
 				"submitSelector": submitSelector,
 				"type": "form"
+			};
+
+			if(username.trim() === "") {
+				errorMessages.push("Username is required");
+			}
+
+			if(password.trim() === "") {
+				errorMessages.push("Password is required");
+			}
+
+			if(usernameSelector.trim() === "") {
+				errorMessages.push("Username-Selector is required");
+			}
+
+			if(passwordSelector.trim() === "") {
+				errorMessages.push("Password-Selector is required");
+			}
+
+			if(submitSelector.trim() === "") {
+				errorMessages.push("Submit-Selector is required");
 			}
 		}
 
@@ -170,6 +207,19 @@ $(document).ready(function () {
 			"zoomLevel": zoomLevel,
 			authenticationInformation: authenticationInformation
 		};
+
+		let failed = $("#save-failed");
+		if(errorMessages.length > 0) {
+			let s = errorMessages.join("<br />");
+			failed.html(s);
+			failed.show();
+			return;
+		}
+
+		failed.hide();
+		failed.html("");
+
+		$("#newModal").modal('hide');
 
 		$.ajax({
 			url: "/screenshot",
