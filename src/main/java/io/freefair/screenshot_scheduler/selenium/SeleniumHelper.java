@@ -16,8 +16,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.TimeZone;
 
 @Component
 public class SeleniumHelper {
@@ -26,6 +28,9 @@ public class SeleniumHelper {
 
 	@Value("${screenshot.date-font-size}")
 	private float fontSize;
+
+	@Value("${screenshot.time_zone}")
+	private String timeZone;
 
 	public void createScreenshot(WebDriver driver, File outputFile, boolean withTimestamp) throws IOException {
 		byte[] screenshotAs = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
@@ -39,7 +44,7 @@ public class SeleniumHelper {
 			} catch (Exception ex) {
 				throw new RuntimeException(ex);
 			}
-			String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat));
+			String time = LocalDateTime.now().atZone(TimeZone.getTimeZone(timeZone).toZoneId()).format(DateTimeFormatter.ofPattern(dateFormat));
 			Rectangle2D stringBounds = graphics.getFontMetrics(font).getStringBounds(time, graphics);
 			int stringWidth = (int) stringBounds.getWidth();
 			int imageWidth = image.getWidth();

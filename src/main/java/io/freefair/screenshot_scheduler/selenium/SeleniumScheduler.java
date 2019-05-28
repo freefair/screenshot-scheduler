@@ -54,35 +54,39 @@ public class SeleniumScheduler {
 	}
 
 	public ScheduledSeleniumSession getSession(UUID id) {
-		if(sessionMap.containsKey(id)) {
-			return sessionMap.get(id);
+		synchronized (sessionMap) {
+			if (sessionMap.containsKey(id)) {
+				return sessionMap.get(id);
+			}
+			return null;
 		}
-		return null;
 	}
 
 	private void execute(List<Screenshot> all) {
-		for (UUID key : sessionMap.keySet()) {
-			Screenshot screenshot = all.stream().filter(a -> a.getId().equals(key)).findFirst().orElse(null);
-			ScheduledSeleniumSession scheduledSeleniumSession = sessionMap.get(key);
-			if (screenshot == null) continue;
-			if (!scheduledSeleniumSession.isReady()) continue;
+		synchronized (sessionMap) {
+			for (UUID key : sessionMap.keySet()) {
+				Screenshot screenshot = all.stream().filter(a -> a.getId().equals(key)).findFirst().orElse(null);
+				ScheduledSeleniumSession scheduledSeleniumSession = sessionMap.get(key);
+				if (screenshot == null) continue;
+				if (!scheduledSeleniumSession.isReady()) continue;
 
-			try {
-				if (((RemoteWebDriver)scheduledSeleniumSession.getSession().getDriver()).getSessionId() == null) {
-					throw new Exception("Session died! Try to restart automatically");
-				}
-				if ((System.currentTimeMillis() - scheduledSeleniumSession.getLastExecution()) < screenshot.getIntervalSeconds() * 1000)
-					continue;
-				log.info("Taking screenshot for {}", key.toString());
-				new ScreenshotThread(scheduledSeleniumSession, screenshot, outputDirectory, seleniumHelper).start();
-				scheduledSeleniumSession.setLastExecution(System.currentTimeMillis());
-			} catch (Exception ex) {
-				log.error("Error while execute " + key, ex);
+				try {
+					if (((RemoteWebDriver) scheduledSeleniumSession.getSession().getDriver()).getSessionId() == null) {
+						throw new Exception("Session died! Try to restart automatically");
+					}
+					if ((System.currentTimeMillis() - scheduledSeleniumSession.getLastExecution()) < screenshot.getIntervalSeconds() * 1000)
+						continue;
+					log.info("Taking screenshot for {}", key.toString());
+					new ScreenshotThread(scheduledSeleniumSession, screenshot, outputDirectory, seleniumHelper).start();
+					scheduledSeleniumSession.setLastExecution(System.currentTimeMillis());
+				} catch (Exception ex) {
+					log.error("Error while execute " + key, ex);
 
-				if (((RemoteWebDriver)scheduledSeleniumSession.getSession().getDriver()).getSessionId() == null) {
-					scheduledSeleniumSession.getSession().getDriver().quit();
+					if (((RemoteWebDriver) scheduledSeleniumSession.getSession().getDriver()).getSessionId() == null) {
+						scheduledSeleniumSession.getSession().getDriver().quit();
+					}
+					sessionMap.remove(key);
 				}
-				sessionMap.remove(key);
 			}
 		}
 	}
