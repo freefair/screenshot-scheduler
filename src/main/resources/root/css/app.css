@@ -1,3 +1,6 @@
 .url-col {
     word-break: break-all;
 }
+.table-column td {
+    vertical-align: middle!important;
+}

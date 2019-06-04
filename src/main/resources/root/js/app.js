@@ -93,12 +93,15 @@ $(document).ready(function () {
 			$("#main-table tbody tr").remove();
 			$(".tooltip").remove();
 			data.forEach(function(screenshot) {
-				var $tr = $("<tr />");
+				var $tr = $("<tr class='table-column' />");
 				var id = $("<td scope='col'/>");
 				var idA = $("<a />");
-				idA.attr("href", "/screenshot/" + screenshot.id + "/image");
+				var imageLink = "/screenshot/" + screenshot.id + "/image";
+				idA.attr("href", imageLink);
 				idA.attr("target", "_blank");
-				idA.text(screenshot.id);
+				var idI = $("<img style='height: 50px; width: auto;' />");
+				idI.attr('src', imageLink);
+				idA.append(idI);
 				id.append(idA);
 				$tr.append(id);
 				var url = $("<td scope='col' class='url-col'/>");
@@ -110,6 +113,13 @@ $(document).ready(function () {
 				var interval = $("<td scope='col'/>");
 				interval.text(screenshot.intervalSeconds);
 				$tr.append(interval);
+				var autostart = $("<td scope='col'/>");
+				if(screenshot.autostart === true) {
+					autostart.append($("<i class='fa fa-check'/>"));
+				} else {
+					autostart.append($("<i class='fa fa-times'/>"));
+				}
+				$tr.append(autostart);
 				var actions = $("<td scope='col'/>");
 				createButtons(actions, screenshot);
 				$tr.append(actions);
