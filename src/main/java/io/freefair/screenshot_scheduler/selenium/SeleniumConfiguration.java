@@ -33,7 +33,7 @@ public class SeleniumConfiguration {
     @Value("${selenium.browser.width}")
     private int width;
 
-    @Value("${selenium.chrome_args}")
+    @Value("#{'${selenium.chrome_args}'.trim().split(' ')}")
     private String[] chromeArgs;
 
     public URL getGridURL() {
