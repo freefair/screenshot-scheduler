@@ -94,6 +94,7 @@ $(document).ready(function () {
 			$(".tooltip").remove();
 			data.forEach(function(screenshot) {
 				var $tr = $("<tr class='table-column' />");
+
 				var id = $("<td scope='col'/>");
 				var idA = $("<a />");
 				var imageLink = "/screenshot/" + screenshot.id + "/image";
@@ -104,15 +105,23 @@ $(document).ready(function () {
 				idA.append(idI);
 				id.append(idA);
 				$tr.append(id);
+
+				var name = $("<td scope='col' class='url-col'/>");
+				name.text(screenshot.name);
+				$tr.append(name);
+
 				var url = $("<td scope='col' class='url-col'/>");
 				url.text(screenshot.url);
 				$tr.append(url);
+
 				var auth = $("<td scope='col'/>");
 				auth.text(screenshot.authenticationInformation.authenticationType);
 				$tr.append(auth);
+
 				var interval = $("<td scope='col'/>");
 				interval.text(screenshot.intervalSeconds);
 				$tr.append(interval);
+
 				var autostart = $("<td scope='col'/>");
 				if(screenshot.autostart === true) {
 					autostart.append($("<i class='fa fa-check'/>"));
@@ -120,6 +129,7 @@ $(document).ready(function () {
 					autostart.append($("<i class='fa fa-times'/>"));
 				}
 				$tr.append(autostart);
+
 				var actions = $("<td scope='col'/>");
 				createButtons(actions, screenshot);
 				$tr.append(actions);
@@ -131,6 +141,7 @@ $(document).ready(function () {
 	reload();
 
 	$("#saveNewScreenshot").click(function () {
+		var name = $("#name1").val();
 		var url = $("#url1").val();
 		var loginUrl = $("#loginUrl1").val();
 		var interval = $("#intervalSeconds1").val();
@@ -208,6 +219,7 @@ $(document).ready(function () {
 		}
 
 		var obj = {
+			"name": name,
 			"url": url,
 			"loginUrl": loginUrl,
 			"intervalSeconds": interval,

@@ -98,10 +98,15 @@ public class SeleniumScheduler {
 					createSession(s);
 				}
 			}
+			List<UUID> keysToStop = new ArrayList<>();
 			for (UUID key : sessionMap.keySet()) {
 				if (all.stream().noneMatch(s -> s.getId().equals(key))) {
-					stopSession(key);
+					keysToStop.add(key);
 				}
+			}
+
+			for (UUID keyToStop : keysToStop) {
+				stopSession(keyToStop);
 			}
 		}
 	}
@@ -118,6 +123,11 @@ public class SeleniumScheduler {
 	public void stopSession(UUID key) {
 		synchronized (sessionMap) {
 			log.info("Deleting screenshot session for {}", key.toString());
+			try {
+				sessionMap.get(key).getSession().stop();
+			} catch (Exception e) {
+				log.error("stop session failed", e);
+			}
 			sessionMap.get(key).delete();
 			sessionMap.remove(key);
 			stoppedSessions.add(key);
@@ -126,11 +136,19 @@ public class SeleniumScheduler {
 
 	public void createSession(Screenshot s) {
 		synchronized (sessionMap) {
-			var session = new ScheduledSeleniumSession(sessionFactory.getObject(), false, 0, s.getYScroll());
-			log.info("Creating screenshot session for {}", s.getId().toString());
-			stoppedSessions.remove(s.getId());
-			sessionMap.put(s.getId(), session);
-			doLogin(session, s);
+			ScheduledSeleniumSession session = null;
+			try {
+				session = new ScheduledSeleniumSession(sessionFactory.getObject(), false, 0, s.getYScroll());
+				log.info("Creating screenshot session for {}", s.getId().toString());
+				stoppedSessions.remove(s.getId());
+				sessionMap.put(s.getId(), session);
+				doLogin(session, s);
+			} catch (Exception e) {
+				log.error("Exception during session creation", e);
+				if (session != null) {
+					session.getSession().stop();
+				}
+			}
 		}
 	}
 
