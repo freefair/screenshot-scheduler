@@ -48,7 +48,7 @@ public class LoginThread implements Runnable {
 		try {
 			var zoomLevel = screenshot.getZoomLevel() * 10;
 			((RemoteWebDriver)scheduledSeleniumSession.getSession().getDriver()).executeScript("document.body.style.zoom = '" + zoomLevel + "%'");
-			helper.createScreenshot(scheduledSeleniumSession.getSession().getDriver(), new File(new File(outputDirectory), screenshot.getId().toString() + ".png"), screenshot.isTimestamp());
+			helper.createScreenshot(scheduledSeleniumSession.getSession().getDriver(), outputDirectory, screenshot);
 		} catch (Exception e) {
 			log.error("Error while creating screenshot", e);
 		}

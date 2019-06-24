@@ -35,7 +35,7 @@ public class ScreenshotThread implements Runnable {
 	public void run() {
 		try {
 			((RemoteWebDriver)scheduledSeleniumSession.getSession().getDriver()).executeScript("window.scrollTo(0, " + scheduledSeleniumSession.getYScroll() + ");");
-			helper.createScreenshot(scheduledSeleniumSession.getSession().getDriver(), new File(new File(outputDirectory), screenshot.getId().toString() + ".png"), screenshot.isTimestamp());
+			helper.createScreenshot(scheduledSeleniumSession.getSession().getDriver(), outputDirectory, screenshot);
 		} catch (Exception e) {
 			scheduledSeleniumSession.delete();
 			log.error("Error while creating screenshot. Stopping Session!", e);

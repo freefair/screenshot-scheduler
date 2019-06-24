@@ -10,6 +10,14 @@ selenium.browser.height=1080
 selenium.browser.width=1920
 ```
 
+Support for Remote Selenium Grid (instead of local browser) - sample grid configuration: docker-compose.grid.yml.
+```properties
+selenium.useGrid=true
+selenium.gridURL=http://localhost:4444/wd/hub
+selenium.browser=chrome
+selenium.platform=linux
+```
+
 Additional configuration such as output directory and timestamp format wich will be rendered inside of the screenshots (if desired)
 ```properties
 screenshot.outputDirectory=screenshots
