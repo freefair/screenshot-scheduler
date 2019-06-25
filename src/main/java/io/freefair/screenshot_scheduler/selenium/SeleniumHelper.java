@@ -84,7 +84,7 @@ public class SeleniumHelper {
             fillImageWithText(image, time, CaptionPosition.LOWER_RIGHT);
 
             String humanName = screenshotConfiguration.getName();
-            if (!humanName.isEmpty()) {
+            if (humanName != null && !humanName.isEmpty()) {
                 fillImageWithText(image, humanName, CaptionPosition.LOWER_LEFT);
             }
 
