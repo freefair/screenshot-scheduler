@@ -1,6 +1,7 @@
 package io.freefair.screenshot_scheduler.selenium;
 
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -12,13 +13,13 @@ import java.util.Objects;
 public class SeleniumSessionFactory implements FactoryBean<SeleniumSession>, EnvironmentAware {
     private Environment environment;
 
+    @Autowired
+    private SeleniumConfiguration seleniumConfiguration;
+
     @SuppressWarnings("ConstantConditions")
     @Override
     public SeleniumSession getObject() {
-        return new SeleniumSession(environment.getProperty("selenium.implicitWait", Integer.class),
-                environment.getProperty("selenium.browser.height", Integer.class),
-                environment.getProperty("selenium.browser.width", Integer.class),
-                Objects.requireNonNull(environment.getProperty("selenium.chrome_args", String.class)).trim().split(" "));
+        return new SeleniumSession(seleniumConfiguration);
     }
 
     @Override

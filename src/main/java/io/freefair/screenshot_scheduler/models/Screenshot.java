@@ -20,6 +20,8 @@ public class Screenshot {
 	@Column(columnDefinition = "varchar(36)")
 	private UUID id;
 
+	private String name;
+
 	private String url;
 
 	private String loginUrl;
