@@ -29,7 +29,7 @@ public class ScreenshotController {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Screenshot> getAll() {
-        return screenshotRepository.findAll();
+        return screenshotRepository.findAllByOrderByNameAsc();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
